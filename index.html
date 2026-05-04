@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actas & Deliberações - Conselho Consultivo AGETRHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== VARIÁVEIS CSS ===== */
+        :root {
+            --primary: #1a4e8e;
+            --secondary: #2a6cba;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --natureza-ordinaria: #1a4e8e;
+            --natureza-extraordinaria: #e83e8c;
+            --natureza-direcao: #fd7e14;
+            --natureza-deliberacao: #20c997;
+        }
+
+        /* ===== RESET E ESTILOS GERAIS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .sidebar-menu li {
+            padding: 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 3px solid white;
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo-texto {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .logo-texto img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* ===== SISTEMA DE NOTIFICAÇÕES ===== */
+        .notificacoes-container {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .btn-notificacoes {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--primary);
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .btn-notificacoes:hover {
+            background-color: rgba(26, 78, 142, 0.1);
+        }
+
+        .badge-notificacoes {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .dropdown-notificacoes {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            width: 350px;
+            z-index: 1000;
+            border: 1px solid #e0e0e0;
+        }
+
+        .dropdown-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropdown-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .lista-notificacoes {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notificacao-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .notificacao-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notificacao-item.nao-lida {
+            background-color: rgba(26, 78, 142, 0.05);
+        }
+
+        .notificacao-item.nao-lida:hover {
+            background-color: rgba(26, 78, 142, 0.1);
+        }
+
+        .notificacao-icone {
+            margin-right: 12px;
+            font-size: 16px;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        .notificacao-conteudo {
+            flex: 1;
+        }
+
+        .notificacao-titulo {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--dark);
+        }
+
+        .notificacao-descricao {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .notificacao-tempo {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .dropdown-footer {
+            padding: 12px 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .dropdown-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .dropdown-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            min-width: 300px;
+            max-width: 400px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icone {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .toast-conteudo {
+            flex: 1;
+        }
+
+        .toast-titulo {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .toast-mensagem {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .toast-fechar {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .toast.sucesso {
+            border-left-color: var(--success);
+        }
+
+        .toast.sucesso .toast-icone {
+            color: var(--success);
+        }
+
+        .toast.erro {
+            border-left-color: var(--danger);
+        }
+
+        .toast.erro .toast-icone {
+            color: var(--danger);
+        }
+
+        .toast.alerta {
+            border-left-color: var(--warning);
+        }
+
+        .toast.alerta .toast-icone {
+            color: var(--warning);
+        }
+
+        .toast.info {
+            border-left-color: var(--primary);
+        }
+
+        .toast.info .toast-icone {
+            color: var(--primary);
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .page-title {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        /* ===== BOTÕES ===== */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        /* ===== TABLES ===== */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: var(--light);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        /* ===== MODAL DE LOGIN ===== */
+        .login-modal {
+            display: flex !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-modal.hidden {
+            display: none !important;
+        }
+
+        .login-modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: modalSlideIn 0.4s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .login-modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-modal-header img {
+            height: 40px;
+            border-radius: 5px;
+        }
+
+        .login-modal-body {
+            padding: 30px;
+        }
+
+        .login-form-group {
+            margin-bottom: 25px;
+        }
+
+        .login-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .login-form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .login-form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 78, 142, 0.2);
+        }
+
+        .login-error-message {
+            color: var(--danger);
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+        }
+
+        .login-success-message {
+            color: var(--success);
+            background-color: rgba(40, 167, 69, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+        }
+
+        .login-modal-footer {
+            padding: 0 30px 30px;
+            text-align: center;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 78, 142, 0.3);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== NATUREZA BADGES ===== */
+        .natureza-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .natureza-ordinaria {
+            background-color: rgba(26, 78, 142, 0.1);
+            color: var(--natureza-ordinaria);
+        }
+        .natureza-extraordinaria {
+            background-color: rgba(232, 62, 140, 0.1);
+            color: var(--natureza-extraordinaria);
+        }
+        .natureza-direcao {
+            background-color: rgba(253, 126, 20, 0.1);
+            color: var(--natureza-direcao);
+        }
+        .natureza-deliberacao {
+            background-color: rgba(32, 201, 151, 0.1);
+            color: var(--natureza-deliberacao);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn.view {
+            background-color: rgba(26, 78, 142, 0.1);
+            color: var(--primary);
+        }
+        .action-btn.edit {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+        .action-btn.delete {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+        .action-btn.print {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #b58900;
+        }
+
+        /* ===== FILTERS ===== */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar-header h2,
+            .sidebar-menu span {
+                display: none;
+            }
+            .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            .sidebar-menu i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .page-title h1 {
+                font-size: 20px;
+            }
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            .content {
+                padding: 15px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            .logo-texto {
+                margin-bottom: 15px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .filters {
+                flex-direction: column;
+            }
+            .filter-group {
+                width: 100%;
+            }
+        }
+
+        body.login-active .sidebar,
+        body.login-active .main-content {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== MODAL DE LOGIN ===== -->
+    <div id="login-modal" class="login-modal">
+        <div class="login-modal-content">
+            <div class="login-modal-header">
+                <img src="https://i.postimg.cc/DyKZTbYq/Logotipo.jpg" alt="AGETRHA Logo">
+                <h2><span style="font-size: 28px; margin-right: 10px;">🔒</span> Acesso Restrito</h2>
+            </div>
+            <div class="login-modal-body">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h3 style="color: var(--primary); margin-bottom: 8px;">Conselho Consultivo</h3>
+                    <p style="color: var(--gray); font-size: 14px;">Consulta de Actas e Deliberações - AGETRHA</p>
+                </div>
+                <form id="login-form" onsubmit="return false;">
+                    <div class="login-form-group">
+                        <label for="login-password"><i class="fas fa-key"></i> Senha de Acesso</label>
+                        <input type="password" id="login-password" class="login-form-control" placeholder="Digite a senha" autocomplete="off" required>
+                        <small style="display:block; margin-top:5px; color:var(--gray);">Se esqueceu a sua senha, contacte a área técnica</small>
+                    </div>
+                    <div id="login-error-message" class="login-error-message"><i class="fas fa-exclamation-circle"></i> <span id="login-error-text"></span></div>
+                    <div id="login-success-message" class="login-success-message"><i class="fas fa-check-circle"></i> Autenticação bem-sucedida!</div>
+                </form>
+            </div>
+            <div class="login-modal-footer">
+                <button id="btn-login-submit" class="btn-login" type="button"><i class="fas fa-sign-in-alt"></i> Entrar no Sistema</button>
+                <p style="margin-top: 15px; font-size: 12px; color: var(--gray);"><i class="fas fa-info-circle"></i> Acesso restrito aos membros do Conselho Consultivo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="sidebar-header"></div>
+        <ul class="sidebar-menu">
+            <li><a href="#" data-page="atas" class="active"><i class="fas fa-file-alt"></i> <span>Actas & Deliberações</span></a></li>
+        </ul>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <!-- ===== TOP BAR ===== -->
+        <div class="top-bar">
+            <div class="logo-texto">
+                <img src="https://i.postimg.cc/DyKZTbYq/Logotipo.jpg" alt="AGETRHA Logo">
+                <strong>CONSELHO CONSULTIVO - AGETRHA</strong>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <div class="notificacoes-container">
+                    <button id="btn-notificacoes" class="btn-notificacoes"><i class="fas fa-bell"></i><span id="badge-notificacoes" class="badge-notificacoes">0</span></button>
+                    <div id="dropdown-notificacoes" class="dropdown-notificacoes">
+                        <div class="dropdown-header">
+                            <h3>Notificações</h3>
+                            <div>
+                                <button id="btn-marcar-todas-lidas" class="btn-text">Marcar todas como lidas</button>
+                                <button id="btn-verificar-notificacoes" class="btn-text" style="margin-left: 10px;"><i class="fas fa-sync-alt"></i> Verificar</button>
+                            </div>
+                        </div>
+                        <div id="lista-notificacoes" class="lista-notificacoes"></div>
+                        <div class="dropdown-footer"><a href="#" id="btn-ver-todas-notificacoes">Ver todas</a></div>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div>
+                        <div style="font-weight: 600;" id="user-name">Diarde Ganga</div>
+                        <div style="font-size: 12px; color: var(--gray);" id="user-role">Secretário-Geral</div>
+                    </div>
+                    <button id="btn-logout" class="btn-text" style="margin-left:10px;"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="content">
+            <!-- Actas e Deliberações (única página ativa) -->
+            <div id="atas-content">
+                <div class="page-title">
+                    <h1><i class="fas fa-file-alt"></i> Consulta de Actas e Deliberações</h1>
+                    <button class="btn btn-primary" id="btn-nova-ata"><i class="fas fa-plus"></i> Nova Acta</button>
+                </div>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Órgão</label>
+                        <select class="form-control" id="filter-orgao">
+                            <option value="">Todos</option>
+                            <option>Reunião da Direcção</option>
+                            <option>Assembleia Geral</option>
+                            <option>Ass.Ger. Extraordinária</option>
+                            <option>Deliberação</option>
+                        </select>
+                    </div>
+                    <div><button class="btn btn-primary" id="btn-filtrar-atas">Aplicar</button></div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nr Acta</th>
+                                <th>Data Reunião</th>
+                                <th>Natureza</th>
+                                <th>Ordem de Trabalho</th>
+                                <th>Registro</th>
+                                <th>Acções</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-atas"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DE BOAS-VINDAS ===== -->
+    <div id="modal-boas-vindas" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 450px; text-align: center;">
+            <div style="padding: 40px 30px;">
+                <div id="boas-vindas-icone" style="font-size: 60px; margin-bottom: 15px;">👋</div>
+                <h2 id="boas-vindas-titulo" style="color: var(--primary); margin-bottom: 10px;"></h2>
+                <p id="boas-vindas-nota" style="color: var(--gray); font-size: 14px;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DE ACTA ===== -->
+    <div id="modal-ata" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-ata-titulo">Nova Acta</h2>
+                <button class="btn-fechar-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-ata">
+                    <input type="hidden" id="ata-id" value="">
+                    <div class="form-group">
+                        <label>Nr da acta *</label>
+                        <input type="text" id="ata-nr" class="form-control" required placeholder="Ex: 001/2025">
+                    </div>
+                    <div class="form-group">
+                        <label>Data da Reunião *</label>
+                        <input type="date" id="ata-data" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total de Participantes *</label>
+                        <input type="number" id="ata-participantes" class="form-control" required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Ordem de Trabalho *</label>
+                        <input type="text" id="ata-ordem" class="form-control" required placeholder="Tópicos da reunião">
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="ata-descricao" class="form-control" rows="4" placeholder="Resumo da acta..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Acta Redigida por *</label>
+                        <input type="text" id="ata-redigida" class="form-control" required placeholder="Nome do redator" pattern="[A-Za-zÀ-ÿ\s]+" title="Apenas letras são permitidas">
+                    </div>
+                    <div class="form-group">
+                        <label>Natureza *</label>
+                        <select id="ata-natureza" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="Ass.Ger. Ordinária">Ass.Ger. Ordinária</option>
+                            <option value="Ass.Ger. Extraordinária">Ass.Ger. Extraordinária</option>
+                            <option value="Reunião da Direcção">Reunião da Direcção</option>
+                            <option value="Deliberação">Deliberação</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Registro (Data automática)</label>
+                        <input type="text" id="ata-registro" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Anexo PDF</label>
+                        <input type="file" id="ata-anexo" class="form-control" accept=".pdf">
+                        <small>Carregue o documento PDF da acta</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="fecharModal('modal-ata')">Cancelar</button>
+                <button class="btn btn-primary" id="btn-salvar-ata">Salvar Acta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DE DETALHES/VISUALIZAÇÃO ===== -->
+    <div id="modal-detalhes" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-detalhes-titulo">Detalhes</h2>
+                <button class="btn-fechar-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="detalhes-conteudo"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="fecharModal('modal-detalhes')">Fechar</button>
+                <button class="btn btn-primary" id="btn-editar-detalhes" style="display:none;">Editar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURAÇÃO INICIAL (DOIS URLs) =====
+        const AUTH_GAS_URL = 'https://script.google.com/macros/s/AKfycbxX03IuHx6nme3eeYHghST2tH--XHjUyKbzSd-wSoWkaYSDAY8cVI6-RINmYwZD6BqwBA/exec';
+        const ATAS_GAS_URL = 'https://script.google.com/macros/s/AKfycbyImQpTQfq5XBLENiFnSms1DbWLEgSh935XUroEzvcKs78Z6B8XrNfpDbq3NVs5jIo/exec';
+
+        let isAuthenticated = false;
+        let authToken = null;
+        let currentUser = { nome: 'Dr. António Joaquim', role: 'secretario' };
+
+        // Função segura para ler localStorage
+        function lerLocalStorage(chave, fallback) {
+            try {
+                const item = localStorage.getItem(chave);
+                return item ? JSON.parse(item) : fallback;
+            } catch (e) {
+                console.warn('localStorage corrompido para "' + chave + '" – a usar fallback.', e);
+                return fallback;
+            }
+        }
+
+        // Arrays de dados
+        let notificacoes = lerLocalStorage('notificacoes_sg', []);
+        let atas = lerLocalStorage('sg_atas', []);
+
+        // Função auxiliar para formatar data ISO
+        function formatarData(dataISO) {
+            if (!dataISO || dataISO.length < 10) return dataISO;
+            const partes = dataISO.substring(0, 10).split('-');
+            if (partes.length !== 3) return dataISO;
+            return `${partes[2]}-${partes[1]}-${partes[0]}`;
+        }
+
+        // ===== FUNÇÕES DE AUTENTICAÇÃO =====
+        function mostrarModalLogin() { 
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.body.classList.add('login-active'); 
+        }
+        function esconderModalLogin() { 
+            document.getElementById('login-modal').classList.add('hidden');
+            document.body.classList.remove('login-active'); 
+        }
+
+        async function fazerLogin() {
+            const senha = document.getElementById('login-password').value.trim();
+            if (!senha) {
+                mostrarErroLogin('Insira a senha');
+                return;
+            }
+
+            const btn = document.getElementById('btn-login-submit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('action', 'login');
+                formData.append('senha', senha);
+
+                // Login envia para o GAS de autenticação
+                const resposta = await fetch(AUTH_GAS_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const dados = await resposta.json();
+
+                if (dados.sucesso) {
+                    authToken = dados.token;
+                    currentUser = { nome: dados.nome, role: dados.role };
+                    sessionStorage.setItem('sg_authenticated', 'true');
+                    sessionStorage.setItem('sg_user', JSON.stringify(currentUser));
+                    sessionStorage.setItem('sg_token', authToken);
+                    mostrarSucessoLogin();
+                    esconderModalLogin();
+                    mostrarModalBoasVindas(dados.role);
+                } else {
+                    mostrarErroLogin(dados.erro || 'Senha incorreta!');
+                }
+            } catch (erro) {
+                console.error('Erro ao contactar o servidor:', erro);
+                mostrarErroLogin('Erro de conexão. Verifique a rede.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function mostrarErroLogin(msg) { 
+            document.getElementById('login-error-text').innerText = msg;
+            document.getElementById('login-error-message').style.display = 'block';
+            document.getElementById('login-success-message').style.display = 'none'; 
+        }
+        function mostrarSucessoLogin() { 
+            document.getElementById('login-error-message').style.display = 'none';
+            document.getElementById('login-success-message').style.display = 'block'; 
+        }
+
+        function mostrarModalBoasVindas(role) {
+            const modal = document.getElementById('modal-boas-vindas');
+            const titulo = document.getElementById('boas-vindas-titulo');
+            const nota = document.getElementById('boas-vindas-nota');
+
+            const saudacao = { titulo: 'BEM-VINDO(A) AO CONSELHO CONSULTIVO', nota: 'NOTA: Acesso para consultas.' };
+            titulo.innerText = saudacao.titulo;
+            nota.innerText = saudacao.nota;
+
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                inicializarSistema();
+            }, 2000);
+        }
+
+        function verificarSessao() {
+            const auth = sessionStorage.getItem('sg_authenticated') === 'true';
+            if (auth) {
+                const user = sessionStorage.getItem('sg_user');
+                const token = sessionStorage.getItem('sg_token');
+                if (user) currentUser = JSON.parse(user);
+                if (token) authToken = token;
+            }
+            return auth && authToken !== null;
+        }
+
+        // ===== FUNÇÃO GENÉRICA DE COMUNICAÇÃO (permite escolher o URL) =====
+        async function fetchGAS(action, extraData = {}, baseUrl = ATAS_GAS_URL) {
+            try {
+                const payload = { action, token: authToken, ...extraData };
+                const formData = new FormData();
+                formData.append('json', JSON.stringify(payload));
+                const resposta = await fetch(baseUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+                const dados = await resposta.json();
+                if (dados.erro) {
+                    console.error('Erro GAS (' + action + '):', dados.erro);
+                    mostrarToast('Erro', dados.erro, 'erro');
+                }
+                return dados;
+            } catch (erro) {
+                console.error('Falha de rede (' + action + '):', erro);
+                mostrarToast('Erro de conexão', 'Não foi possível contactar o servidor.', 'erro');
+                return { erro: erro.message };
+            }
+        }
+
+        function aplicarPermissoes() {
+            const role = currentUser.role;
+            const roleMap = {
+                'presidente': 'Presidente',
+                'vice-presidente': 'Vice-Presidente',
+                '1º secretário': '1.º Secretário',
+                '2º secretário': '2.º Secretário',
+                'consultor(a) chefe': 'Consultor(a) Chefe',
+                '2º consultor(a)': '2.º Consultor(a)'
+            };
+            document.getElementById('user-name').innerText = currentUser.nome;
+            document.getElementById('user-role').innerText = roleMap[role] || role;
+
+            const isConsultor = role.toLowerCase().includes('consultor');
+            if (isConsultor) {
+                document.querySelectorAll('.btn-primary, .btn-success, .btn-warning, .btn-danger').forEach(btn => {
+                    if (!btn.id.includes('exportar') && !btn.id.includes('view') && !btn.id.includes('print')) {
+                        btn.style.display = 'none';
+                    }
+                });
+            } else {
+                document.querySelectorAll('.btn-primary, .btn-success, .btn-warning, .btn-danger').forEach(
+                    btn => btn.style.display = 'inline-flex');
+            }
+        }
+
+        // ===== NOTIFICAÇÕES =====
+        function inicializarNotificacoes() {
+            const btn = document.getElementById('btn-notificacoes');
+            const dropdown = document.getElementById('dropdown-notificacoes');
+            btn.addEventListener('click', () => dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block');
+            document.addEventListener('click', (e) => { 
+                if (!btn.contains(e.target) && !dropdown.contains(e.target)) dropdown.style.display = 'none'; 
+            });
+
+            document.getElementById('btn-marcar-todas-lidas').addEventListener('click', async () => {
+                const resposta = await fetchGAS('markNotificacoesLidas');
+                if (resposta.sucesso) {
+                    mostrarToast('Notificações', 'Todas marcadas como lidas', 'sucesso');
+                    carregarNotificacoes();
+                }
+            });
+
+            document.getElementById('btn-verificar-notificacoes').addEventListener('click', async () => {
+                await carregarNotificacoes();
+                mostrarToast('Atualizado', 'Notificações verificadas', 'info');
+            });
+
+            carregarNotificacoes();
+        }
+
+        async function carregarNotificacoes() {
+            const lista = document.getElementById('lista-notificacoes');
+            const badge = document.getElementById('badge-notificacoes');
+            if (!lista || !badge) return;
+
+            lista.innerHTML = '<div style="padding:20px; text-align:center;">A carregar…</div>';
+
+            const resposta = await fetchGAS('getNotificacoes');
+            if (resposta.erro) {
+                lista.innerHTML = '<div style="padding:20px; text-align:center;">Erro ao carregar</div>';
+                return;
+            }
+
+            const notificacoesData = resposta;
+            window.notificacoes = notificacoesData;
+
+            const naoLidas = notificacoesData.filter(n => !n.lida).length;
+            badge.innerText = naoLidas;
+            badge.style.display = naoLidas > 0 ? 'flex' : 'none';
+
+            if (notificacoesData.length === 0) {
+                lista.innerHTML = '<div style="padding:20px; text-align:center;">Nenhuma notificação</div>';
+                return;
+            }
+
+            const notificacoesOrdenadas = [...notificacoesData].reverse();
+            lista.innerHTML = notificacoesOrdenadas.map(n => `
+                <div class="notificacao-item ${n.lida ? '' : 'nao-lida'}">
+                    <div class="notificacao-icone"><i class="fas fa-info-circle"></i></div>
+                    <div class="notificacao-conteudo">
+                        <div class="notificacao-titulo">${n.titulo}</div>
+                        <div class="notificacao-descricao">${n.mensagem}</div>
+                        <div class="notificacao-tempo">${n.dataCriacao ? new Date(n.dataCriacao).toLocaleString() : 'Agora'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function mostrarToast(titulo, mensagem, tipo = 'info') {
+            const container = document.querySelector('.toast-container') || (() => { 
+                const div = document.createElement('div'); div.className = 'toast-container'; 
+                document.body.appendChild(div); return div; 
+            })();
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.innerHTML = `
+                <div class="toast-icone"><i class="fas ${tipo === 'sucesso' ? 'fa-check-circle' : tipo === 'erro' ? 'fa-exclamation-circle' : tipo === 'alerta' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i></div>
+                <div class="toast-conteudo">
+                    <div class="toast-titulo">${titulo}</div>
+                    <div class="toast-mensagem">${mensagem}</div>
+                </div>
+                <button class="toast-fechar">&times;</button>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            toast.querySelector('.toast-fechar').addEventListener('click', () => { 
+                toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); 
+            });
+            setTimeout(() => { 
+                if (toast.parentNode) { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); } 
+            }, 5000);
+        }
+
+        // ===== ACTAS E DELIBERAÇÕES =====
+        async function carregarAtas() {
+            const tbody = document.getElementById('tabela-atas');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">A carregar...</td></tr>';
+
+            const resposta = await fetchGAS('getAtas');
+            if (resposta.erro) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:red;">Erro ao carregar atas</td></tr>';
+                return;
+            }
+            atas.length = 0;
+            atas.push(...resposta);
+            window.atas = atas;
+
+            const isConsultor = currentUser.role.toLowerCase().includes('consultor');
+            tbody.innerHTML = atas.map(a => `
+                <tr>
+                    <td>${a.nr}</td>
+                    <td>${formatarData(a.dataReuniao)}</td>
+                    <td><span class="natureza-badge ${getNaturezaClass(a.natureza)}">${a.natureza}</span></td>
+                    <td>${a.ordem}</td>
+                    <td>${a.registro}</td>
+                    <td class="action-buttons">
+                        <button class="action-btn view" onclick="verAta(${a.id})"><i class="fas fa-eye"></i></button>
+                        ${a.anexo ? `<button class="action-btn print" onclick="imprimirAnexoAta(${a.id})"><i class="fas fa-print"></i></button>` : ''}
+                        ${!isConsultor ? `<button class="action-btn delete" onclick="excluirAta(${a.id})"><i class="fas fa-trash"></i></button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getNaturezaClass(natureza) {
+            if (natureza.includes('Ordinária')) return 'natureza-ordinaria';
+            if (natureza.includes('Extraordinária')) return 'natureza-extraordinaria';
+            if (natureza.includes('Direcção')) return 'natureza-direcao';
+            if (natureza.includes('Deliberação')) return 'natureza-deliberacao';
+            return '';
+        }
+
+        function abrirModalAta(editMode = false, ata = null) {
+            if (currentUser.role.toLowerCase().includes('consultor')) return;
+            document.getElementById('modal-ata-titulo').innerText = editMode ? 'Editar Acta' : 'Nova Acta';
+            document.getElementById('ata-id').value = ata ? ata.id : '';
+            document.getElementById('ata-nr').value = ata ? ata.nr : '';
+            document.getElementById('ata-data').value = ata ? ata.dataReuniao : '';
+            document.getElementById('ata-participantes').value = ata ? ata.participantes : '';
+            document.getElementById('ata-ordem').value = ata ? ata.ordem : '';
+            document.getElementById('ata-descricao').value = ata ? ata.descricao : '';
+            document.getElementById('ata-redigida').value = ata ? ata.redigida : '';
+            document.getElementById('ata-natureza').value = ata ? ata.natureza : '';
+            document.getElementById('ata-registro').value = ata ? ata.registro : new Date().toLocaleDateString('pt-PT');
+            document.getElementById('ata-anexo').value = '';
+            document.getElementById('modal-ata').style.display = 'flex';
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function salvarAta() {
+            if (currentUser.role.toLowerCase().includes('consultor')) return;
+
+            const id = document.getElementById('ata-id').value;
+            const fileInput = document.getElementById('ata-anexo');
+            const ata = {
+                id: id ? parseInt(id) : null,
+                nr: document.getElementById('ata-nr').value,
+                dataReuniao: document.getElementById('ata-data').value,
+                participantes: document.getElementById('ata-participantes').value,
+                ordem: document.getElementById('ata-ordem').value,
+                descricao: document.getElementById('ata-descricao').value,
+                redigida: document.getElementById('ata-redigida').value,
+                natureza: document.getElementById('ata-natureza').value,
+                registro: document.getElementById('ata-registro').value
+            };
+
+            if (!ata.nr) { alert('Número da acta obrigatório'); return; }
+            if (!ata.dataReuniao) { alert('Data da reunião obrigatória'); return; }
+            if (!ata.participantes || isNaN(ata.participantes) || ata.participantes < 1) { alert('Total de participantes deve ser um número válido'); return; }
+            if (!ata.ordem) { alert('Ordem de trabalho obrigatória'); return; }
+            if (!ata.redigida) { alert('Acta redigida por é obrigatório'); return; }
+            if (!/^[A-Za-zÀ-ÿ\s]+$/.test(ata.redigida)) { alert('Nome do redator deve conter apenas letras'); return; }
+            if (!ata.natureza) { alert('Natureza obrigatória'); return; }
+
+            let payload = { action: 'saveAta', ata: ata };
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                if (file.type !== 'application/pdf') {
+                    alert('Apenas arquivos PDF são permitidos.');
+                    return;
+                }
+                try {
+                    const base64 = await fileToBase64(file);
+                    payload.anexoBase64 = base64.split(',')[1];
+                    payload.anexoNome = file.name;
+                } catch (erro) {
+                    alert('Erro ao processar o arquivo PDF.');
+                    return;
+                }
+            }
+
+            const resposta = await fetchGAS('saveAta', payload);
+            if (resposta.sucesso) {
+                mostrarToast('Sucesso', id ? 'Acta atualizada' : 'Acta criada', 'sucesso');
+                fecharModal('modal-ata');
+                carregarAtas();
+            }
+        }
+
+        function verAta(id) {
+            const ata = atas.find(a => a.id == id);
+            if (!ata) return;
+
+            const conteudo = document.getElementById('detalhes-conteudo');
+            document.getElementById('modal-detalhes-titulo').innerText = 'Detalhes da Acta';
+            conteudo.innerHTML = `
+                <div style="display:grid; gap:15px;">
+                    <div><strong>Nr Acta:</strong> ${ata.nr}</div>
+                    <div><strong>Data Reunião:</strong> ${formatarData(ata.dataReuniao)}</div>
+                    <div><strong>Participantes:</strong> ${ata.participantes}</div>
+                    <div><strong>Ordem de Trabalho:</strong> ${ata.ordem}</div>
+                    <div><strong>Natureza:</strong> ${ata.natureza}</div>
+                    <div><strong>Redigida por:</strong> ${ata.redigida || 'N/A'}</div>
+                    <div><strong>Registro:</strong> ${ata.registro || 'N/A'}</div>
+                    <div><strong>Descrição:</strong> ${ata.descricao || 'Sem descrição'}</div>
+                </div>
+            `;
+
+            const btnEditar = document.getElementById('btn-editar-detalhes');
+            const isConsultor = currentUser.role.toLowerCase().includes('consultor');
+            btnEditar.style.display = isConsultor ? 'none' : 'inline-flex';
+            btnEditar.onclick = () => {
+                fecharModal('modal-detalhes');
+                abrirModalAta(true, ata);
+            };
+
+            document.getElementById('modal-detalhes').style.display = 'flex';
+        }
+
+        function imprimirAnexoAta(id) {
+            const ata = atas.find(a => a.id == id);
+            if (!ata || !ata.anexo) {
+                alert('Nenhum anexo disponível para impressão.');
+                return;
+            }
+            const url = `https://drive.google.com/file/d/${ata.anexo.id}/view`;
+            window.open(url, '_blank');
+        }
+
+        async function excluirAta(id) {
+            if (currentUser.role.toLowerCase().includes('consultor')) return;
+            if (!confirm('Excluir esta acta?')) return;
+
+            const resposta = await fetchGAS('deleteAta', { id: id });
+            if (resposta.sucesso) {
+                mostrarToast('Sucesso', 'Acta excluída', 'sucesso');
+                carregarAtas();
+            }
+        }
+
+        function fecharModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // ===== INICIALIZAÇÃO PRINCIPAL =====
+        function inicializarSistema() {
+            aplicarPermissoes();
+            inicializarNotificacoes();
+            carregarAtas();
+
+            // Event listeners
+            document.getElementById('btn-nova-ata').addEventListener('click', () => abrirModalAta(false, null));
+            document.getElementById('btn-salvar-ata').addEventListener('click', salvarAta);
+
+            document.getElementById('btn-filtrar-atas').addEventListener('click', () => {
+                const orgaoFiltro = document.getElementById('filter-orgao').value;
+                let atasFiltradas = atas;
+                const orgaoParaNatureza = {
+                    'Reunião da Direcção': 'Reunião da Direcção',
+                    'Assembleia Geral': 'Ass.Ger. Ordinária',
+                    'Ass.Ger. Extraordinária': 'Ass.Ger. Extraordinária',
+                    'Deliberação': 'Deliberação'
+                };
+                if (orgaoFiltro) {
+                    const naturezaCorrespondente = orgaoParaNatureza[orgaoFiltro];
+                    if (naturezaCorrespondente) {
+                        atasFiltradas = atasFiltradas.filter(a => a.natureza === naturezaCorrespondente);
+                    }
+                }
+                const tbody = document.getElementById('tabela-atas');
+                const isConsultor = currentUser.role.toLowerCase().includes('consultor');
+                tbody.innerHTML = atasFiltradas.map(a => `
+                    <tr>
+                        <td>${a.nr}</td>
+                        <td>${formatarData(a.dataReuniao)}</td>
+                        <td><span class="natureza-badge ${getNaturezaClass(a.natureza)}">${a.natureza}</span></td>
+                        <td>${a.ordem}</td>
+                        <td>${a.registro}</td>
+                        <td class="action-buttons">
+                            <button class="action-btn view" onclick="verAta(${a.id})"><i class="fas fa-eye"></i></button>
+                            ${a.anexo ? `<button class="action-btn print" onclick="imprimirAnexoAta(${a.id})"><i class="fas fa-print"></i></button>` : ''}
+                            ${!isConsultor ? `<button class="action-btn delete" onclick="excluirAta(${a.id})"><i class="fas fa-trash"></i></button>` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+                mostrarToast('Filtro aplicado', `${atasFiltradas.length} acta(s) encontrada(s)`, 'info');
+            });
+
+            document.querySelectorAll('.btn-fechar-modal').forEach(btn => btn.addEventListener('click', () => btn.closest('.modal').style.display = 'none'));
+            window.addEventListener('click', (e) => { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; });
+
+            document.getElementById('btn-logout').addEventListener('click', () => {
+                sessionStorage.clear();
+                location.reload();
+            });
+        }
+
+        // ===== INÍCIO DA APLICAÇÃO =====
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('btn-login-submit').addEventListener('click', fazerLogin);
+            document.getElementById('login-password').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    fazerLogin();
+                }
+            });
+
+            if (verificarSessao()) {
+                esconderModalLogin();
+                inicializarSistema();
+            } else {
+                mostrarModalLogin();
+            }
+        });
+    </script>
+</body>
+</html>
